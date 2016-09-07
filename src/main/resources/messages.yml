@@ -1,0 +1,8 @@
+prefix: "&6[&fPrimoCombat&6]&f"
+helpheader: "&6----- &fCommands & 6-----"
+disablehelp: "&6/primocombat disable <module> &f- Disable a module"
+enablehelp: "&6/primocombat enable <module> &f- Enable a module"
+enabled: "&fEnabled module: &c{0}&f."
+disabled: "&fDisabled module: &c{0}&f."
+wrongcommand: "&cThat command doesn't exist."
+nosuchmodule: "&cNo module with the name &f{0}&c exists."

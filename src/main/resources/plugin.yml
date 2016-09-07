@@ -1,0 +1,8 @@
+name: PrimoCombat
+version: VERSION
+author: kukelekuuk00
+main: net.primomc.PrimoCombat.PrimoCombat
+commands:
+  primocombat:
+    aliases: [pc]
+    permission: primocombat.admin
