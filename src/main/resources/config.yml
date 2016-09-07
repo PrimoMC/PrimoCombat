@@ -2,7 +2,7 @@ modules:
   # Module that stops bowboosting.
   # Bowboosting is where you're running and lightly use a punch 2 bow so it hits you and propels you forward
   # This is unnatural and practically a bug. The module stops you from hitting yourself with arrows.
-  bowboosting:
+  anti-bowboost:
     enabled: true
   # Module that prevents bows in your offhand.
   # Bows in your off-hand simply make zero sense. It allows you to use bows, a double handed weapon, together with your sword without switching items.

@@ -24,7 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
  * limitations under the License.
  */
 
-@Name( value = "bowboosting" )
+@Name( value = "anti-bowboost" )
 public class BowBoostingModule extends AbstractModule
 {
 
