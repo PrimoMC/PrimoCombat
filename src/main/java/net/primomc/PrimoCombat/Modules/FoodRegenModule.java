@@ -5,6 +5,7 @@ import net.primomc.PrimoCombat.PrimoCombat;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,10 +34,10 @@ import java.util.UUID;
 @Name( value = "customfoodregen" )
 public class FoodRegenModule extends AbstractModule
 {
-    int maxRegen;
-    double foodPerHealth;
-    int regenTime;
-    Set<UUID> set = Collections.synchronizedSet( new HashSet<UUID>() );
+    private int maxRegen;
+    private double foodPerHealth;
+    private int regenTime;
+    private Set<UUID> set = Collections.synchronizedSet( new HashSet<UUID>() );
 
     public FoodRegenModule( ConfigurationSection section )
     {
@@ -74,16 +75,15 @@ public class FoodRegenModule extends AbstractModule
                     {
                         if ( i % regenTime == 0 )
                         {
-
                             int decimalFoodPerHealth = (int) ( foodPerHealth + fraction );
                             fraction = foodPerHealth - decimalFoodPerHealth;
                             if ( player.getHealth() < player.getMaxHealth() )
                             {
-                                player.setHealth( player.getHealth() + 1 );
+                                player.setHealth( player.getHealth() + 1 < player.getMaxHealth() ? player.getHealth() + 1 : player.getMaxHealth() );
                                 player.setSaturation( 0f );
                                 player.setFoodLevel( player.getFoodLevel() - decimalFoodPerHealth > 0 ? player.getFoodLevel() - decimalFoodPerHealth : 0 );
-                                regened++;
                             }
+                            regened++;
 
                             if ( regened >= maxRegen )
                             {
