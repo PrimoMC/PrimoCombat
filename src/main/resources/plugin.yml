@@ -2,6 +2,7 @@ name: PrimoCombat
 version: VERSION
 author: kukelekuuk00
 main: net.primomc.PrimoCombat.PrimoCombat
+depend: [ProtocolLib]
 commands:
   primocombat:
     aliases: [pc]
