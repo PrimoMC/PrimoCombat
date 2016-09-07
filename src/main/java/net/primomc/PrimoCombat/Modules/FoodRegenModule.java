@@ -80,6 +80,7 @@ public class FoodRegenModule extends AbstractModule
                             if ( player.getHealth() < player.getMaxHealth() )
                             {
                                 player.setHealth( player.getHealth() + 1 );
+                                player.setSaturation( 0f );
                                 player.setFoodLevel( player.getFoodLevel() - decimalFoodPerHealth > 0 ? player.getFoodLevel() - decimalFoodPerHealth : 0 );
                                 regened++;
                             }
