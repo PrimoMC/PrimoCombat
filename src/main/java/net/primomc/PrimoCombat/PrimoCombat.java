@@ -1,6 +1,7 @@
 package net.primomc.PrimoCombat;
 
 import net.primomc.PrimoCombat.Annotations.Name;
+import net.primomc.PrimoCombat.Messages.MessageHandler;
 import net.primomc.PrimoCombat.Modules.*;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -40,6 +41,8 @@ public class PrimoCombat extends JavaPlugin
     public void onEnable()
     {
         instance = this;
+        new MessageHandler( this );
+        saveDefaultConfig();
         initModules();
         getServer().getPluginCommand( "primocombat" ).setExecutor( new CommandExecutor( this ) );
     }
