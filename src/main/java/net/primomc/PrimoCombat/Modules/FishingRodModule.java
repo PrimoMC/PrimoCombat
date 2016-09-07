@@ -1,18 +1,26 @@
 package net.primomc.PrimoCombat.Modules;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableMap;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
 import net.primomc.PrimoCombat.Annotations.Name;
-import org.bukkit.Bukkit;
+import net.primomc.PrimoCombat.PrimoCombat;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 
-import java.util.EnumMap;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Copyright 2016 Luuk Jacobs
@@ -31,39 +39,74 @@ import java.util.EnumMap;
  */
 
 @Name( value = "fishingrod" )
-public class FishingRodModule extends AbstractModule
+public class FishingRodModule extends AbstractModule implements Listener
 {
+    Map<UUID, UUID> isCaught = new HashMap<>();
+
     public FishingRodModule( ConfigurationSection section )
     {
         super( section );
     }
 
     @EventHandler
-    public void onPlayerFish( PlayerFishEvent event )
+    public void onPlayerFish( ProjectileHitEvent event )
     {
-        if ( event.getState() != PlayerFishEvent.State.CAUGHT_ENTITY )
+        if ( event.getEntity().getType() != EntityType.FISHING_HOOK )
         {
             return;
         }
-        if ( !( event.getCaught() instanceof Player ) )
+        if ( !( event.getEntity().getShooter() instanceof Player ) )
         {
             return;
         }
-        Player shooter = event.getPlayer();
-        Player caught = (Player) event.getCaught();
-        if ( shooter.getUniqueId() == caught.getUniqueId() )
+        Player shooter = (Player) event.getEntity().getShooter();
+
+        Collection<Entity> entities = event.getEntity().getNearbyEntities( 0.3, 0.3, 0.3 );
+
+        for ( Entity caught : entities )
         {
-            return;
+            if ( shooter.getUniqueId() == caught.getUniqueId() )
+            {
+                continue;
+            }
+
+            if ( isCaught.containsKey( shooter.getUniqueId() ) && isCaught.get( shooter.getUniqueId() ) == caught.getUniqueId() )
+            {
+                continue;
+            }
+            PrimoCombat.getInstance().getLogger().info( "fake damage packet" );
+            PacketContainer damageAnimation = new PacketContainer( PacketType.Play.Server.ENTITY_STATUS );
+            damageAnimation.getIntegers().write( 0, caught.getEntityId() );
+            damageAnimation.getBytes().write( 0, (byte) 2 );
+            for ( Player player : caught.getNearbyEntities( 32, 32, 32 ).stream().filter( e -> e instanceof Player ).map( e -> (Player) e ).collect( Collectors.toSet() ) )
+            {
+                try
+                {
+                    ProtocolLibrary.getProtocolManager().sendServerPacket( player, damageAnimation );
+                }
+                catch ( InvocationTargetException e )
+                {
+                    e.printStackTrace();
+                }
+            }
+            Location loc = caught.getLocation().add( 0, 0.5, 0 );
+            caught.teleport( loc );
+            caught.setVelocity( loc.subtract( shooter.getLocation() ).toVector().normalize().multiply( 0.4 ) );
+            isCaught.put( shooter.getUniqueId(), caught.getUniqueId() );
+            break;
         }
-        Bukkit.getPluginManager().callEvent( createDamageEvent( shooter, caught ) );
-        Location loc = caught.getLocation().add( 0, 0.5, 0 );
-        caught.teleport( loc );
-        caught.setVelocity( loc.subtract( shooter.getLocation() ).toVector().normalize().multiply( 0.4 ) );
     }
 
-    @SuppressWarnings( { "unchecked", "rawtypes" } )
-    private EntityDamageByEntityEvent createDamageEvent( Player rodder, Player player )
+    @EventHandler
+    public void onFish( PlayerFishEvent event )
     {
-        return new EntityDamageByEntityEvent( rodder, player, EntityDamageEvent.DamageCause.ENTITY_ATTACK, new EnumMap( ImmutableMap.of( EntityDamageEvent.DamageModifier.BASE, 0.1D ) ), new EnumMap( ImmutableMap.of( EntityDamageEvent.DamageModifier.BASE, Functions.constant( 0.1D ) ) ) );
+        if ( event.getState() != PlayerFishEvent.State.FISHING )
+        {
+            if ( isCaught.containsKey( event.getPlayer().getUniqueId() ) )
+            {
+                PrimoCombat.getInstance().getLogger().info( "is no longer caught" );
+                isCaught.remove( event.getPlayer().getUniqueId() );
+            }
+        }
     }
 }
