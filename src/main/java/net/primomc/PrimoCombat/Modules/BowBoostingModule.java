@@ -36,16 +36,16 @@ public class BowBoostingModule extends AbstractModule
     @EventHandler
     public void onBowBoost( EntityDamageByEntityEvent event )
     {
-      if(event.getDamager().getType() == EntityType.ARROW)
-      {
-          Arrow arrow = (Arrow) event.getDamager();
-          if(event.getEntity() instanceof Player && arrow.getShooter() instanceof Player )
-          {
-              if(event.getDamager().getUniqueId() == ( (Player) arrow.getShooter() ).getUniqueId())
-              {
-                  event.setCancelled( true );
-              }
-          }
-      }
+        if ( event.getDamager().getType() == EntityType.ARROW )
+        {
+            Arrow arrow = (Arrow) event.getDamager();
+            if ( event.getEntity() instanceof Player && arrow.getShooter() instanceof Player )
+            {
+                if ( event.getEntity().getUniqueId() == ( (Player) arrow.getShooter() ).getUniqueId() )
+                {
+                    event.setCancelled( true );
+                }
+            }
+        }
     }
 }
