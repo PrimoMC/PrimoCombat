@@ -11,7 +11,7 @@ modules:
     enabled: true
   # Module that restores 1.7 fishing rod functionality.
   # Fishing rods should damage and knockback. This adds more depth to pvp.
-  19fishingrod:
+  fishingrod:
     enabled: true
   # Module that balances 1.9 health regen.
   # In 1.9 when you have a full bar of hunger you will recover hearts at godspeed with little to no downsides. This makes regen and health potions practically worthless.

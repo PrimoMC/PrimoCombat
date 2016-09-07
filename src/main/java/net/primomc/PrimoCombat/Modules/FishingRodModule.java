@@ -30,7 +30,7 @@ import java.util.EnumMap;
  * limitations under the License.
  */
 
-@Name( value = "19fishingrods" )
+@Name( value = "fishingrod" )
 public class FishingRodModule extends AbstractModule
 {
     public FishingRodModule( ConfigurationSection section )
