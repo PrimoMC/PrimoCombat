@@ -6,7 +6,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Copyright 2016 Luuk Jacobs
@@ -35,17 +37,35 @@ public class OffhandBowModule extends AbstractModule
     @EventHandler
     public void inventoryClick( InventoryClickEvent event )
     {
-        if ( event.getWhoClicked() instanceof Player && event.getSlot() == -106 && event.getCurrentItem().getType().equals( Material.BOW ) )
+        if ( event.getWhoClicked() instanceof Player && event.getSlot() == 40 && event.getCursor().getType().equals( Material.BOW ) )
         {
             event.setCancelled( true );
         }
     }
+
     @EventHandler
-    public void inventoryClick( PlayerSwapHandItemsEvent event )
+    public void inventorySwap( PlayerSwapHandItemsEvent event )
     {
-        if(event.getOffHandItem().getType().equals( Material.BOW ))
+        if ( event.getOffHandItem().getType().equals( Material.BOW ) )
         {
             event.setCancelled( true );
+        }
+    }
+
+    @EventHandler
+    public void inventoryDrag( InventoryDragEvent event )
+    {
+        if ( event.getInventorySlots().contains( 40 ) )
+        {
+            for ( ItemStack stack : event.getNewItems().values() )
+            {
+                if ( stack.getType().equals( Material.BOW ) )
+                {
+                    event.setCancelled( true );
+                    return;
+                }
+            }
+
         }
     }
 }
