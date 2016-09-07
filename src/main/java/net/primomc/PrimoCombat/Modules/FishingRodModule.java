@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import net.primomc.PrimoCombat.Annotations.Name;
-import net.primomc.PrimoCombat.PrimoCombat;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
@@ -74,7 +73,6 @@ public class FishingRodModule extends AbstractModule implements Listener
             {
                 continue;
             }
-            PrimoCombat.getInstance().getLogger().info( "fake damage packet" );
             PacketContainer damageAnimation = new PacketContainer( PacketType.Play.Server.ENTITY_STATUS );
             damageAnimation.getIntegers().write( 0, caught.getEntityId() );
             damageAnimation.getBytes().write( 0, (byte) 2 );
@@ -104,7 +102,6 @@ public class FishingRodModule extends AbstractModule implements Listener
         {
             if ( isCaught.containsKey( event.getPlayer().getUniqueId() ) )
             {
-                PrimoCombat.getInstance().getLogger().info( "is no longer caught" );
                 isCaught.remove( event.getPlayer().getUniqueId() );
             }
         }
