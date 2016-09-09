@@ -5,6 +5,7 @@ import net.primomc.PrimoCombat.PrimoCombat;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,7 +37,7 @@ public class FoodRegenModule extends AbstractModule
     private int maxRegen;
     private double foodPerHealth;
     private int regenTime;
-    private Set<UUID> set = Collections.synchronizedSet( new HashSet<UUID>() );
+    private Set<UUID> set = Collections.synchronizedSet( new HashSet<>() );
 
     public FoodRegenModule( ConfigurationSection section )
     {
@@ -56,6 +57,19 @@ public class FoodRegenModule extends AbstractModule
     }
 
     @EventHandler
+    public void onDamage( EntityDamageEvent event )
+    {
+        if ( event.getEntity() instanceof Player )
+        {
+            final Player player = (Player) event.getEntity();
+            if ( player.getFoodLevel() >= 20 && !set.contains( player.getUniqueId() ) )
+            {
+                runTask( player );
+            }
+        }
+    }
+
+    @EventHandler
     public void onEat( FoodLevelChangeEvent event )
     {
         if ( event.getEntity() instanceof Player )
@@ -63,36 +77,43 @@ public class FoodRegenModule extends AbstractModule
             final Player player = (Player) event.getEntity();
             if ( event.getFoodLevel() >= 20 && !set.contains( player.getUniqueId() ) )
             {
-                new BukkitRunnable()
-                {
-                    int i = 0;
-                    int regened = 0;
-                    double fraction = 0;
-
-                    @Override
-                    public void run()
-                    {
-                        if ( i % regenTime == 0 )
-                        {
-                            int decimalFoodPerHealth = (int) ( foodPerHealth + fraction );
-                            fraction = foodPerHealth - decimalFoodPerHealth;
-                            if ( player.getHealth() < player.getMaxHealth() )
-                            {
-                                player.setHealth( player.getHealth() + 1 < player.getMaxHealth() ? player.getHealth() + 1 : player.getMaxHealth() );
-                                player.setSaturation( 0f );
-                                player.setFoodLevel( player.getFoodLevel() - decimalFoodPerHealth > 0 ? player.getFoodLevel() - decimalFoodPerHealth : 0 );
-                            }
-                            regened++;
-
-                            if ( regened >= maxRegen )
-                            {
-                                this.cancel();
-                            }
-                        }
-                        i++;
-                    }
-                }.runTaskTimer( PrimoCombat.getInstance(), 1, 1 );
+                runTask( player );
             }
         }
+    }
+
+    private void runTask( Player player )
+    {
+        set.add( player.getUniqueId() );
+        new BukkitRunnable()
+        {
+            int i = 0;
+            int regened = 0;
+            double fraction = 0;
+
+            @Override
+            public void run()
+            {
+                if ( i % regenTime == 0 )
+                {
+                    int decimalFoodPerHealth = (int) ( foodPerHealth + fraction );
+                    fraction = foodPerHealth - decimalFoodPerHealth;
+                    if ( player.getHealth() < player.getMaxHealth() )
+                    {
+                        player.setHealth( player.getHealth() + 1 < player.getMaxHealth() ? player.getHealth() + 1 : player.getMaxHealth() );
+                        player.setSaturation( 0f );
+                        player.setFoodLevel( player.getFoodLevel() - decimalFoodPerHealth > 0 ? player.getFoodLevel() - decimalFoodPerHealth : 0 );
+                    }
+                    regened++;
+
+                    if ( regened >= maxRegen )
+                    {
+                        set.remove( player.getUniqueId() );
+                        this.cancel();
+                    }
+                }
+                i++;
+            }
+        }.runTaskTimer( PrimoCombat.getInstance(), 5, 1 );
     }
 }
