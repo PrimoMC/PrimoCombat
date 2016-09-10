@@ -94,6 +94,11 @@ public class FoodRegenModule extends AbstractModule
             @Override
             public void run()
             {
+                if(player.isDead())
+                {
+                    this.cancel();
+                    return;
+                }
                 if ( i % regenTime == 0 )
                 {
                     int decimalFoodPerHealth = (int) ( foodPerHealth + fraction );
