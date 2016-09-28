@@ -10,6 +10,13 @@ PrimoCombat currently has 4 modules.
 - **Fishing Rods** - Restores 1.7 fishing rod functionality. Fishing rods now, once again, deal a slight bit of damage and knock you back.
 - **OffhandBow** - Prevents you from putting a bow in your off-hand slot.
 - **Custom Food Regen** - This makes it so your hunger also goes down as you heal from full hunger. With a few configurable values.
+- **Projectile Trajectories** - This gets rid of projectile trajectory randomness/arrow spread and odd behaviour moving while shooting. 
+    - Arrow Spread:
+        - Before (50 block distance): http://i.rdthrne.com/67b0845555.png
+        - After (50 block distance): http://i.rdthrne.com/97f143a59a.png
+    - Odd behaviour:
+        - Before: http://i.rdthrne.com/6388fdf843.mp4
+        - After: http://i.rdthrne.com/5e0964276b.mp4
 
 
 ## Config
@@ -43,4 +50,12 @@ modules:
     # The amount of time should be between health recovery, in ticks. 1 tick = 50ms
     # Example: If max-regen = 6 and regen-time = 10, then it will recover 1 health every 500ms. So it would take 6*500ms = 3 seconds to heal 6 health (or 3 hearts)
     regen-time: 10
+  # Module that removes randomness from projectile trajectories.
+  # In vanilla Minecraft arrows have a slight randomness to the trajectories, it's not very noticeable at close-range,
+  # but it becomes exponentially more noticeable the further away the player is. At a certain distance it becomes pretty difficult to hit targets.
+  # This also gets rid of odd projectile behaviour when you're moving around, falling, etc.
+  trajectory:
+    enabled: true
 ```
+
+
