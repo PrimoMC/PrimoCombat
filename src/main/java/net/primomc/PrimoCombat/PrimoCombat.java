@@ -61,7 +61,7 @@ public class PrimoCombat extends JavaPlugin
 
     private void findModules()
     {
-        List<Class<? extends AbstractModule>> modules = Arrays.asList( BowBoostingModule.class, FishingRodModule.class, OffhandBowModule.class, FoodRegenModule.class );
+        List<Class<? extends AbstractModule>> modules = Arrays.asList( BowBoostingModule.class, FishingRodModule.class, OffhandBowModule.class, FoodRegenModule.class, TrajectoryModule.class );
         for ( Class<? extends AbstractModule> clazz : modules )
         {
             String name = clazz.getAnnotation( Name.class ).value();

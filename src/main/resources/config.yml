@@ -25,3 +25,9 @@ modules:
     # The amount of time should be between health recovery, in ticks. 1 tick = 50ms
     # Example: If max-regen = 6 and regen-time = 10, then it will recover 1 health every 500ms. So it would take 6*500ms = 3 seconds to heal 6 health (or 3 hearts)
     regen-time: 10
+  # Module that removes randomness from projectile trajectories.
+  # In vanilla Minecraft arrows have a slight randomness to the trajectories, it's not very noticeable at close-range,
+  # but it becomes exponentially more noticeable the further away the player is. At a certain distance it becomes pretty difficult to hit targets.
+  # This also gets rid of odd projectile behaviour when you're moving around, falling, etc.
+  trajectory:
+    enabled: true
