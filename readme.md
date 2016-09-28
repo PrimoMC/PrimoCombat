@@ -7,7 +7,7 @@ PrimoCombat is a small plugin that changes some of the mechanics in post-1.9 pvp
 PrimoCombat currently has 4 modules. 
 
 - **Anti-BowBoosting** - Blocks Bow Boosting by not allowing you to hit yourself with arrows. 
-- **Fishing Rods** - Restores 1.7 fishing rod functionality. Fishing rods now, once again, deal a slight bit of damage and knock you back.
+- **Fishing Rods** - Restores 1.7 fishing rod functionality. Fishing rods now, once again, knock you back.
 - **OffhandBow** - Prevents you from putting a bow in your off-hand slot.
 - **Custom Food Regen** - This makes it so your hunger also goes down as you heal from full hunger. With a few configurable values.
 - **Projectile Trajectories** - This gets rid of projectile trajectory randomness/arrow spread and odd behaviour moving while shooting. 
